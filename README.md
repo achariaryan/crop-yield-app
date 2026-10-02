@@ -12,6 +12,17 @@ Forest trained on log-transformed yield.
 | MAE | ≈ 4.3 |
 | Missing Value Rate | 0% |
 
+## Units
+
+| Field | Unit |
+|---|---|
+| Area | hectares (ha) |
+| Annual Rainfall | millimetres (mm) |
+| Fertilizer | kilograms (kg) |
+| Pesticide | kilograms (kg) |
+| Production | tonnes (t) |
+| Yield (predicted) | tonnes per hectare (t/ha) |
+
 ## How it works
 
 1. Cleans the dataset (drops zero-yield rows, caps extreme yields)

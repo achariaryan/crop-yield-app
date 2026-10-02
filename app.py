@@ -54,7 +54,7 @@ col1, col2, col3, col4, col5 = st.columns(5)
 
 col1.metric("Yield Planning Accuracy", f"{kpis['yield_accuracy']:.2f}%")
 col2.metric("R² Score", f"{kpis['r2']:.4f}")
-col3.metric("MAE", f"{kpis['mae']:.4f}")
+col3.metric("MAE (t/ha)", f"{kpis['mae']:.4f}")
 col4.metric("Missing Value Rate", f"{kpis['missing_rate']:.2f}%")
 col5.metric("Dataset Records", f"{len(df):,}")
 
@@ -77,16 +77,18 @@ with col1:
     )
 
 with col2:
-    area = st.number_input("Area", min_value=0.01, value=100.0)
+    area = st.number_input("Area (hectares)", min_value=0.01, value=100.0)
     rainfall = st.number_input(
-        "Annual Rainfall", min_value=0.0,
+        "Annual Rainfall (mm)", min_value=0.0,
         value=float(df["Annual_Rainfall"].median()),
     )
     fertilizer = st.number_input(
-        "Fertilizer", min_value=0.0, value=float(df["Fertilizer"].median()),
+        "Fertilizer (kg)", min_value=0.0,
+        value=float(df["Fertilizer"].median()),
     )
     pesticide = st.number_input(
-        "Pesticide", min_value=0.0, value=float(df["Pesticide"].median()),
+        "Pesticide (kg)", min_value=0.0,
+        value=float(df["Pesticide"].median()),
     )
 
 st.divider()
@@ -103,7 +105,7 @@ if st.button("🌾 Predict Crop Yield", use_container_width=True):
     ))
     latency = time.perf_counter() - start_time
 
-    st.success(f"🌾 Predicted Crop Yield: {prediction:.4f}")
+    st.success(f"🌾 Predicted Crop Yield: {prediction:.4f} tonnes per hectare (t/ha)")
     st.info(f"⚡ Prediction Latency: {latency:.4f} seconds")
 
 st.divider()
@@ -125,7 +127,7 @@ kpi_table = pd.DataFrame({
     "Measurement": [
         "100 - (MAE / Mean Actual Yield × 100)",
         "Coefficient of determination",
-        "Mean Absolute Error",
+        "Mean Absolute Error (t/ha)",
         "(Missing Values / Total Values) × 100",
         "Prediction end time - start time",
     ],
@@ -143,5 +145,7 @@ st.dataframe(kpi_table, use_container_width=True, hide_index=True)
 
 st.caption(
     "Final Model: Random Forest Regression (log target, 300 trees) | "
-    "Production excluded to prevent potential data leakage"
+    "Production excluded to prevent potential data leakage | "
+    "Yields in tonnes per hectare (t/ha); area in hectares; "
+    "rainfall in mm; fertilizer & pesticide in kg"
 )
