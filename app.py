@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Streamlit app for crop yield prediction (deployable version)."""
+import os
 import time
 
 import numpy as np
@@ -7,6 +8,14 @@ import pandas as pd
 import streamlit as st
 
 from model_pipeline import predict_yield, train_model
+
+# Optional fallback if the host ever runs low on memory: add
+# RF_N_ESTIMATORS = "150" to the app's Secrets (settings page) and redeploy.
+try:
+    if "RF_N_ESTIMATORS" in st.secrets:
+        os.environ["RF_N_ESTIMATORS"] = str(st.secrets["RF_N_ESTIMATORS"])
+except Exception:
+    pass
 
 st.set_page_config(
     page_title="Crop Yield Prediction",
